@@ -1,0 +1,14 @@
+{% extends "encyclopedia/layout.html" %} {% block title %} Search {%endblock %}
+{% block body %}
+<h1>Search Results</h1>
+{% comment %}
+<h2>Query not found, Did you mean to find...</h2>
+{% endcomment %}
+<ul>
+    {% for match in matches %}
+    <li>{{ match }}</li>
+    {% empty %}
+    <li>No results found!</li>
+    {% endfor %}
+</ul>
+{% endblock %}

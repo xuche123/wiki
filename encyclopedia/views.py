@@ -1,7 +1,7 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from markdown2 import markdown
-from pathlib import Path
-
 from . import util
 
 
@@ -21,3 +21,20 @@ def wiki(request, entry):
         })
     else:
         return render(request, "encyclopedia/error.html")
+
+
+def search(request):
+    if request.method == "POST":
+        q = request.POST["q"]
+        if util.get_entry(q):
+            return HttpResponseRedirect(reverse("wiki", args=[q]))
+        else:
+            lists = util.list_entries()
+            matches = []
+            for list in lists:
+                if q.lower() in list.lower():
+                    matches += [list]
+            return render(request, "encyclopedia/search.html", {
+                "matches": matches
+            })
+    return HttpResponseRedirect(reverse("index"))
