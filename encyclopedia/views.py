@@ -35,6 +35,7 @@ def search(request):
                 if q.lower() in list.lower():
                     matches += [list]
             return render(request, "encyclopedia/search.html", {
+                "count": len(matches),
                 "matches": matches
             })
     return HttpResponseRedirect(reverse("index"))
