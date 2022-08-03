@@ -12,6 +12,10 @@
             crossorigin="anonymous"
         />
         <link href="{% static 'encyclopedia/styles.css' %}" rel="stylesheet" />
+        <link
+            rel="shortcut icon"
+            href="{%  static 'encyclopedia/favicon.ico' %}"
+        />
     </head>
     <body>
         <div class="row">
@@ -29,7 +33,7 @@
                 <div>
                     <a href="{% url 'index' %}">Home</a>
                 </div>
-                <div>Create New Page</div>
+                <div><a href="{% url 'create' %}">Create New Page</a></div>
                 <div>Random Page</div>
                 {% block nav %} {% endblock %}
             </div>

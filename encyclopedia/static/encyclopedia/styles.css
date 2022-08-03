@@ -13,8 +13,13 @@ h1 {
 }
 
 textarea {
-    height: 90vh;
+    height: 50vh;
     width: 80%;
+    display: block;
+}
+
+label {
+    display: block;
 }
 
 .main {
