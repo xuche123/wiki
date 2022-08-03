@@ -5,6 +5,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from markdown2 import markdown
 from . import util
+import random
 
 
 class NewEntryForm(forms.Form):
@@ -96,3 +97,8 @@ def edit(request, entry):
     return render(request, "encyclopedia/edit.html", {
         "form": EditEntryForm(initial={'title': entry, 'content': util.get_entry(entry)})
     })
+
+def random_page(request):
+    entries = util.list_entries()
+    entry = random.choice(entries)
+    return HttpResponseRedirect(reverse('wiki', args=[entry]))
