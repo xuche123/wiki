@@ -1,4 +1,3 @@
-from bson import is_valid
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -20,6 +19,12 @@ class NewEntryForm(forms.Form):
         title = self.cleaned_data['title']
         if title in util.list_entries():
             raise ValidationError("Page already exists!")
+        return title
+
+
+class EditEntryForm(NewEntryForm):
+    def clean_title(self):
+        title = self.cleaned_data['title']
         return title
 
 
@@ -59,7 +64,7 @@ def search(request):
     return HttpResponseRedirect(reverse("index"))
 
 
-def new_entry(request):
+def create(request):
     if request.method == "POST":
         form = NewEntryForm(request.POST)
         if form.is_valid() and form.clean_title():
@@ -74,4 +79,20 @@ def new_entry(request):
 
     return render(request, "encyclopedia/create.html", {
         "form": NewEntryForm()
+    })
+
+
+def edit(request, entry):
+    if request.method == "POST":
+        form = EditEntryForm(request.POST)
+        if form.is_valid() and form.clean_title():
+            content = form.cleaned_data["content"]
+            util.save_entry(entry, content)
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return render(request, "encyclopedia/edit.html", {
+                "form": form
+            })
+    return render(request, "encyclopedia/edit.html", {
+        "form": EditEntryForm(initial={'title': entry, 'content': util.get_entry(entry)})
     })
