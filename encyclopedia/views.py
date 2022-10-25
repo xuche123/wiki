@@ -78,10 +78,7 @@ def create(request):
                 return render(request, "encyclopedia/entry.html", {
                     "html": html,
                     "title": title
-                })
-            # return HttpResponseRedirect(reverse("index"))
-
-            
+                })         
         else:
             return render(request, "encyclopedia/create.html", {
                 "form": form
@@ -96,9 +93,16 @@ def edit(request, entry):
     if request.method == "POST":
         form = EditEntryForm(request.POST)
         if form.is_valid() and form.clean_title():
+            title = form["title"].value()
             content = form.cleaned_data["content"]
             util.save_entry(entry, content)
-            return HttpResponseRedirect(reverse("index"))
+            file = util.get_entry(title)
+            if file:
+                html = markdown(file)
+                return render(request, "encyclopedia/entry.html", {
+                    "html": html,
+                    "title": title
+                })
         else:
             return render(request, "encyclopedia/edit.html", {
                 "form": form
