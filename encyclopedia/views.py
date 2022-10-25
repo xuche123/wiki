@@ -72,7 +72,16 @@ def create(request):
             title = form.cleaned_data["title"]
             content = form.cleaned_data["content"]
             util.save_entry(title, content)
-            return HttpResponseRedirect(reverse("index"))
+            file = util.get_entry(title)
+            if file:
+                html = markdown(file)
+                return render(request, "encyclopedia/entry.html", {
+                    "html": html,
+                    "title": title
+                })
+            # return HttpResponseRedirect(reverse("index"))
+
+            
         else:
             return render(request, "encyclopedia/create.html", {
                 "form": form
